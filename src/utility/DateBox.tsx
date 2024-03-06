@@ -48,6 +48,13 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
                             null
                     }
 
+                    {item.isHoliday ?
+                        <View style={styles.holiday}>
+                            <Text style={{ fontSize: 16, color: "#e3242b", fontWeight: "600" }}>H</Text>
+                        </View>
+                        :
+                        null
+                    }
 
                     {item.status == "true" ?
                         <View style={[styles.status, { backgroundColor: "#00f" }]} />
@@ -97,7 +104,7 @@ const styles = StyleSheet.create({
         height: height,
         borderRadius: 10,
         elevation: 3,
-        backgroundColor: "#e3242b",
+        backgroundColor: "#ffabab",
         marginHorizontal: 3,
         marginVertical: 3,
         alignItems: "center",
@@ -122,5 +129,15 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 14,
         fontWeight: "400",
+    },
+    holiday:{
+        borderWidth: 2,
+        alignSelf: "center",
+        borderColor: "#e3242b",
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 30,
+        height: 30,
+        borderRadius: 30,
     },
 });
