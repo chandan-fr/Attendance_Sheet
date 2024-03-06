@@ -10,7 +10,24 @@ const AttendanceSlice = createSlice({
     },
     reducers: {
         getMonthArray(state, { payload }) {
-            state.month_array = payload;
+            let data: any[] = [];
+            for (let i: number = 0, j: number = 0; i < payload.length; i++) {
+                if (i == 0) {
+                    data.push({ ...payload[j], isHoliday: true, isDisabled: true });
+                    j += 6;
+                    continue;
+                }
+                if (i == j) {
+                    data.push({ ...payload[j], isHoliday: true, isDisabled: true });
+                    data.push({ ...payload[j + 1], isHoliday: true, isDisabled: true });
+                    j += 6 + 1;
+                    i += 1;
+                    continue;
+                }
+                data.push({ ...payload[i], isHoliday: false });
+            };
+            const modifiedData: any = data
+            state.month_array = modifiedData;
         },
         updateMonthArray(state, { payload }) {
             const data = state.month_array;

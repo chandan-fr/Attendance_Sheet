@@ -17,7 +17,7 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
 
     return (
         <TouchableOpacity
-            style={item.date == currentDay ? styles.boxActive : styles.box}
+            style={item.date == currentDay ? styles.boxActive : item.isHoliday ? styles.boxHoliday : styles.box}
             disabled={item.isDisabled || item.empty ? true : false}
             onPress={() => onPress(index)}
         >
@@ -36,7 +36,7 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
                     </Text>
 
                     {item.isAbsent == "absent" ?
-                        <Text style={[styles.atndnc, { backgroundColor: "#f00" }]}>
+                        <Text style={[styles.atndnc, { backgroundColor: "#e3242b" }]}>
                             A
                         </Text>
                         :
@@ -53,7 +53,7 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
                         <View style={[styles.status, { backgroundColor: "#00f" }]} />
                         :
                         item.status == "false" ?
-                            <View style={[styles.status, { backgroundColor: "#f00" }]} />
+                            <View style={[styles.status, { backgroundColor: "#e3242b" }]} />
                             :
                             null
                     }
@@ -86,6 +86,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         elevation: 3,
         backgroundColor: "#2EBB92",
+        marginHorizontal: 3,
+        marginVertical: 3,
+        alignItems: "center",
+        padding: 3,
+        rowGap: 4,
+    },
+    boxHoliday: {
+        width: width,
+        height: height,
+        borderRadius: 10,
+        elevation: 3,
+        backgroundColor: "#e3242b",
         marginHorizontal: 3,
         marginVertical: 3,
         alignItems: "center",

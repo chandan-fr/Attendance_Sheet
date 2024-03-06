@@ -6,6 +6,7 @@ export type DayDate = {
     empty?: boolean;
     isDisabled: boolean;
     isAbsent: string;
+    isHoliday?: boolean,
 }
 
 export const getMonthToDatesArray = (): DayDate[] => {
