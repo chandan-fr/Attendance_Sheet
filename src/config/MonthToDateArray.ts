@@ -1,6 +1,7 @@
 export type DayDate = {
     day: string;
     date: number | null;
+    month: number;
     time: string;
     status: string;
     empty?: boolean;
@@ -24,11 +25,11 @@ export const getMonthToDatesArray = (): DayDate[] => {
         const day = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date);
         const dayOfMonth = date.getDate();
 
-        dayDateArray.push({ day, date: dayOfMonth, time: "", status: "", empty: false, isDisabled: false, isAbsent: "" });
+        dayDateArray.push({ day, date: dayOfMonth, month: month, time: "", status: "", empty: false, isDisabled: false, isAbsent: "" });
     }
 
     const emptyDayCell = Array.from({ length: startIndex },
-        () => { return { day: "", date: null, time: "", status: "", empty: true, isDisabled: false, isAbsent: "" } }
+        () => { return { day: "", date: null, month: month, time: "", status: "", empty: true, isDisabled: false, isAbsent: "" } }
     );
     const newDayDateArray = [...emptyDayCell, ...dayDateArray]
 
