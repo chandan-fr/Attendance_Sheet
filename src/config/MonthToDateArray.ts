@@ -8,6 +8,7 @@ export type DayDate = {
     isDisabled: boolean;
     isAbsent: string;
     isHoliday?: boolean,
+    isLeave?: boolean,
 }
 
 export const getMonthToDatesArray = (): DayDate[] => {
@@ -25,11 +26,11 @@ export const getMonthToDatesArray = (): DayDate[] => {
         const day = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date);
         const dayOfMonth = date.getDate();
 
-        dayDateArray.push({ day, date: dayOfMonth, month: month, time: "", status: "", empty: false, isDisabled: false, isAbsent: "" });
+        dayDateArray.push({ day, date: dayOfMonth, month: month, time: "", status: "", empty: false, isDisabled: false, isAbsent: "", isLeave: false });
     }
 
     const emptyDayCell = Array.from({ length: startIndex },
-        () => { return { day: "", date: null, month: month, time: "", status: "", empty: true, isDisabled: false, isAbsent: "" } }
+        () => { return { day: "", date: null, month: month, time: "", status: "", empty: true, isDisabled: false, isAbsent: "", isLeave: false } }
     );
     const newDayDateArray = [...emptyDayCell, ...dayDateArray]
 

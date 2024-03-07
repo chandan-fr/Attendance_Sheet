@@ -1,78 +1,106 @@
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Keyboard, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 
 type UpdateModal_Props = {
     visible: boolean;
     onPress: Function;
     onClose: Function;
-}
+};
 
 const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Element => {
     const [atData, setAtData] = useState<string>("present");
+    const [leaveHoliday, setLeaveHoliday] = useState<string>("");
     const [time, setTime] = useState<string>("");
 
     return (
         <Modal
             visible={visible}
             transparent={true}
-            style={{alignItems: "center", justifyContent: "center"}}
+            style={{ alignItems: "center", justifyContent: "center" }}
         >
-            <View style={styles.body}>
-                <TouchableOpacity
-                    style={{ alignSelf: "flex-end", borderWidth: 1, padding: 4, borderRadius: 4 }}
-                    onPress={() => onClose()}
-                >
-                    <Text style={{ fontSize: 15, fontWeight: "500", color: "#000" }}>
-                        Close
-                    </Text>
-                </TouchableOpacity>
-
-                <View style={styles.midWrap}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <TouchableOpacity
-                            style={atData == "present" ? styles.btnActive : styles.btn}
-                            onPress={() => setAtData("present")}
-                        >
-                            <Text style={atData == "present" ? styles.btnTxtActive : styles.btnTxt}>
-                                Present
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={atData == "absent" ? styles.btnActive : styles.btn}
-                            onPress={() => setAtData("absent")}
-                        >
-                            <Text style={atData == "absent" ? styles.btnTxtActive : styles.btnTxt}>
-                                Absent
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={{rowGap: 10}}>
-                        <Text style={{fontSize: 18, fontWeight: "500", color: "#3d4342"}}>
-                            Enter Time Manually ?
-                        </Text>
-                        <TextInput
-                            placeholder='HH:MM:SS'
-                            style={styles.input}
-                            placeholderTextColor={"#2EBB92"}
-                            value= {time}
-                            onChangeText={value => setTime(value)}
-                        />
-                    </View>
-                </View>
-
-                <View style={{}}>
+            <TouchableWithoutFeedback
+                onPressIn={() => setLeaveHoliday("")}
+                onPressOut={Keyboard.dismiss}
+            >
+                <View style={styles.body}>
                     <TouchableOpacity
-                        style={styles.save}
-                        onPress={() => {onPress(atData, time); setTime("")}}
+                        style={{ alignSelf: "flex-end", borderWidth: 1, padding: 4, borderRadius: 4 }}
+                        onPress={() => onClose()}
                     >
-                        <Text style={{ fontSize: 18, fontWeight: "500", color: "#3CCBA1" }}>
-                            Save
+                        <Text style={{ fontSize: 15, fontWeight: "500", color: "#000" }}>
+                            Close
                         </Text>
                     </TouchableOpacity>
+
+                    <View style={styles.midWrap}>
+                        {/* Present & Absent */}
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                            <TouchableOpacity
+                                style={atData == "present" ? styles.btnActive : styles.btn}
+                                onPress={() => {setAtData("present"); setLeaveHoliday("")}}
+                            >
+                                <Text style={atData == "present" ? styles.btnTxtActive : styles.btnTxt}>
+                                    Present
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={atData == "absent" ? styles.btnActive : styles.btn}
+                                onPress={() => {setAtData("absent"); setLeaveHoliday("")}}
+                            >
+                                <Text style={atData == "absent" ? styles.btnTxtActive : styles.btnTxt}>
+                                    Absent
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Holiday & Leave */}
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                            <TouchableOpacity
+                                style={leaveHoliday == "holiday" ? styles.btnActive : styles.btn}
+                                onPress={() => {setLeaveHoliday("holiday"); setAtData("")}}
+                            >
+                                <Text style={leaveHoliday == "holiday" ? styles.btnTxtActive : styles.btnTxt}>
+                                    Holiday
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={leaveHoliday == "leave" ? styles.btnActive : styles.btn}
+                                onPress={() => {setLeaveHoliday("leave"); setAtData("")}}
+                            >
+                                <Text style={leaveHoliday == "leave" ? styles.btnTxtActive : styles.btnTxt}>
+                                    Leave
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{ rowGap: 10 }}>
+                            <Text style={{ fontSize: 18, fontWeight: "500", color: "#3d4342" }}>
+                                Enter Time Manually ?
+                            </Text>
+                            <TextInput
+                                placeholder='HH:MM:SS'
+                                style={styles.input}
+                                placeholderTextColor={"#2EBB92"}
+                                value={time}
+                                onChangeText={value => setTime(value)}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{}}>
+                        <TouchableOpacity
+                            style={styles.save}
+                            onPress={() => { onPress(atData, time, leaveHoliday); setTime("") }}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: "500", color: "#3CCBA1" }}>
+                                Save
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </Modal>
     )
 };
@@ -84,10 +112,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         marginHorizontal: 25,
         marginVertical: 110,
-        maxHeight: 290,
-        minHeight: 290,
+        maxHeight: 350,
+        minHeight: 350,
         elevation: 3,
-        flex: 1,
         paddingVertical: 20,
         paddingHorizontal: 10,
         borderRadius: 10,

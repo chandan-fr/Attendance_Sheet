@@ -1,22 +1,20 @@
-import { SafeAreaView, StyleSheet, Text, View, FlatList, Dimensions } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import DateBox from '../../utility/DateBox'
 import WeekView from '../../utility/WeekView';
 import UpdateModal from '../../utility/UpdateModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { countLateAndAbsent, updateMonthArray } from '../../services/slices/AttendanceSlice';
+import { countEvents, updateMonthArray } from '../../services/slices/AttendanceSlice';
 import { compareTimeWithCurrent } from '../../config/CompareTime';
 
 type Splash_Props = {
   navigation: any
 };
 
-const { width } = Dimensions.get("window");
-
 var curIndex: number;
 
 const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
-  const { month_array, late, absent } = useSelector((state: any) => state.attendanceSlice);
+  const { month_array, late, absent, leaves, work_days } = useSelector((state: any) => state.attendanceSlice);
   const currentDay: number = new Date().getDate();
   const currentYear: number = new Date().getFullYear();
   const currentMonth: string = new Date().toLocaleString('en-US', { month: 'long' });
@@ -32,13 +30,15 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
     setShow(false);
   };
 
-  const manageDate = (params: string, time: string) => {
-    const entryTime = new Date().toTimeString().split(" ")[0];
-    const finalEntryTime = time ? time : entryTime
+  const manageDate = (params: string, time: string, leaveHoliday: string) => {
+    const entryTime: string = new Date().toTimeString().split(" ")[0];
+    const finalEntryTime: string = time ? time : entryTime;
+    const holiday: boolean = leaveHoliday == "holiday" ? true : false;
+    const leave: boolean = leaveHoliday == "leave" ? true : false;
     const res = compareTimeWithCurrent(finalEntryTime);
-    dispatch(updateMonthArray({ index: curIndex, isAbsent: params, time: finalEntryTime, status: res }));
+    dispatch(updateMonthArray({ index: curIndex, isAbsent: params, time: finalEntryTime, status: res, holiday: holiday, leave: leave }));
     closeModal();
-    dispatch(countLateAndAbsent());
+    dispatch(countEvents());
   };
 
   return (
@@ -71,9 +71,16 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
               />
             </View>
 
-            <View style={styles.total}>
-              <Text style={styles.totalTxt}>Total Late: {late}</Text>
-              <Text style={styles.totalTxt}>Total Absent: {absent}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={styles.total}>
+                <Text style={styles.totalTxt}>Total Late: {late}</Text>
+                <Text style={styles.totalTxt}>Total Absent: {absent}</Text>
+              </View>
+
+              <View style={styles.total}>
+                <Text style={styles.totalTxt}>Total Leave: {leaves}</Text>
+                <Text style={styles.totalTxt}>Total Working Day: {work_days}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -125,7 +132,6 @@ const styles = StyleSheet.create({
   total: {
     padding: 18,
     marginBottom: 20,
-    alignSelf: "flex-start",
   },
   totalTxt: {
     fontSize: 20,

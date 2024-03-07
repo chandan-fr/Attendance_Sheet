@@ -2,7 +2,7 @@ import { Image, StatusBar, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { DayDate, getMonthToDatesArray } from '../config/MonthToDateArray';
-import { countLateAndAbsent, getMonthArray } from '../services/slices/AttendanceSlice';
+import { countEvents, getMonthArray } from '../services/slices/AttendanceSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Splash_Props = {
@@ -29,7 +29,7 @@ const Splash = ({ navigation }: Splash_Props): JSX.Element => {
   useEffect(() => {
     getAsyncData();
     setTimeout(() => {
-      dispatch(countLateAndAbsent());
+      dispatch(countEvents());
       navigation.replace("monthview");
     }, 1000);
   }, [dispatch]);

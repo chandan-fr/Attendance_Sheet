@@ -33,24 +33,7 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
             </Text>
 
             {!item.empty ?
-                <View style={{ rowGap: 4, width: "100%", alignItems: 'flex-start', justifyContent: "center" }}>
-                    <Text style={[styles.time, { color: item.date == currentDay ? "#fff" : "#808886" }]}>
-                        {/* {item.time} */}
-                        {item.time ? shortTime : null}
-                    </Text>
-
-                    {item.isAbsent == "absent" ?
-                        <Text style={[styles.atndnc, { backgroundColor: "#e3242b" }]}>
-                            A
-                        </Text>
-                        :
-                        item.isAbsent == "present" ?
-                            <Text style={[styles.atndnc, { backgroundColor: "#ff0" }]}>
-                                P
-                            </Text>
-                            :
-                            null
-                    }
+                <View style={{ rowGap: 4, width: "100%", alignItems: 'flex-start', justifyContent: "center", flex: 1 }}>
 
                     {item.isHoliday ?
                         <View style={styles.holiday}>
@@ -60,10 +43,42 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
                         null
                     }
 
-                    {item.status == "true" ?
+                    {item.isLeave ?
+                        <View style={styles.holiday}>
+                            <Text style={{ fontSize: 16, color: "#e3242b", fontWeight: "600" }}>L</Text>
+                        </View>
+                        :
+                        null
+                    }
+
+                    {item.isAbsent == "absent" ?
+                        <View style={styles.holiday}>
+                            <Text style={{ fontSize: 16, color: "#e3242b", fontWeight: "600" }}>A</Text>
+                        </View>
+                        :
+                        null
+                    }
+
+                    {item.isAbsent == "present" ?
+                        <Text style={[styles.atndnc, { backgroundColor: "#ff0" }]}>
+                            P
+                        </Text>
+                        :
+                        null
+                    }
+
+                    {item.isAbsent == "present" ?
+                        <Text style={[styles.time, { color: item.date == currentDay ? "#fff" : "#808886" }]}>
+                            {item.time ? shortTime : null}
+                        </Text>
+                        :
+                        null
+                    }
+
+                    {item.status == "true" && item.isAbsent == "present" ?
                         <View style={[styles.status, { backgroundColor: "#00f" }]} />
                         :
-                        item.status == "false" ?
+                        item.status == "false" && item.isAbsent == "present" ?
                             <View style={[styles.status, { backgroundColor: "#e3242b" }]} />
                             :
                             null

@@ -6,7 +6,9 @@ const AttendanceSlice = createSlice({
     initialState: {
         month_array: [],
         late: 0,
-        absent: 0
+        absent: 0,
+        leaves: 0,
+        work_days: 0
     },
     reducers: {
         getMonthArray(state, { payload }) {
@@ -38,7 +40,9 @@ const AttendanceSlice = createSlice({
                         isAbsent: payload.isAbsent,
                         time: payload.time,
                         status: payload.status,
-                        isDisabled: true
+                        isDisabled: true,
+                        isHoliday: payload.holiday,
+                        isLeave: payload.leave
                     };
                 }
                 return item;
@@ -46,14 +50,24 @@ const AttendanceSlice = createSlice({
             state.month_array = modifiedData;
             AsyncStorage.setItem("@absentLate", JSON.stringify(modifiedData));
         },
-        countLateAndAbsent(state) {
+        countEvents(state) {
+            let countLate: number = 0;
+            let countAbsent: number = 0;
+            let countLeave: number = 0;
+            let countWorkday: number = 0;
             state.month_array.map((item: any) => {
-                if (item.status === "false") state.late++
-                if (item.isAbsent === "absent") state.absent++
+                if (item.status === "false" && item.isAbsent === "present") countLate++
+                if (item.isAbsent === "absent") countAbsent++
+                if (item.isLeave) countLeave++
+                if (!item.isHoliday && item.date !== null) countWorkday++
             });
+            state.late = countLate;
+            state.absent = countAbsent;
+            state.leaves = countLeave;
+            state.work_days = countWorkday;
         },
     },
 });
 
-export const { getMonthArray, updateMonthArray, countLateAndAbsent } = AttendanceSlice.actions;
+export const { getMonthArray, updateMonthArray, countEvents } = AttendanceSlice.actions;
 export default AttendanceSlice.reducer;
