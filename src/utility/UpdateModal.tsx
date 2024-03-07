@@ -82,12 +82,14 @@ export default UpdateModal;
 const styles = StyleSheet.create({
     body: {
         backgroundColor: "#fff",
-        marginHorizontal: 40,
+        marginHorizontal: 25,
         marginVertical: 110,
         maxHeight: 290,
+        minHeight: 290,
         elevation: 3,
         flex: 1,
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 10,
         borderRadius: 10,
     },
     midWrap: {

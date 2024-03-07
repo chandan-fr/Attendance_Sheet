@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, FlatList } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, FlatList, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import DateBox from '../../utility/DateBox'
 import WeekView from '../../utility/WeekView';
@@ -10,6 +10,8 @@ import { compareTimeWithCurrent } from '../../config/CompareTime';
 type Splash_Props = {
   navigation: any
 };
+
+const { width } = Dimensions.get("window");
 
 var curIndex: number;
 
@@ -34,7 +36,7 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
     const entryTime = new Date().toTimeString().split(" ")[0];
     const finalEntryTime = time ? time : entryTime
     const res = compareTimeWithCurrent(finalEntryTime);
-    dispatch(updateMonthArray({index: curIndex, isAbsent: params, time: finalEntryTime, status: res }));
+    dispatch(updateMonthArray({ index: curIndex, isAbsent: params, time: finalEntryTime, status: res }));
     closeModal();
     dispatch(countLateAndAbsent());
   };
@@ -48,28 +50,31 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
           </Text>
         </View>
 
-        <View style={styles.calendarWrap}>
-          <Text style={styles.sub_heading}>
-            {`${currentMonth}, ${currentYear}`}
-          </Text>
+        <View style={{ flex: 1 }}>
+          <View style={styles.calendarWrap}>
+            <Text style={styles.sub_heading}>
+              {`${currentMonth}, ${currentYear}`}
+            </Text>
 
-          <View style={styles.calendar}>
-            <FlatList
-              data={month_array}
-              numColumns={7}
-              style={{ flex: 1 }}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(_, index) => index.toString()}
-              ListHeaderComponent={<WeekView />}
-              renderItem={({ item, index }) => (
-                <DateBox item={item} index={index} currentDay={currentDay} onPress={openModal} />
-              )}
-            />
-          </View>
+            <View style={styles.calendar}>
+              <FlatList
+                data={month_array}
+                numColumns={7}
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1, paddingTop: 3, flexWrap: "wrap" }}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(_, index) => index.toString()}
+                ListHeaderComponent={<WeekView />}
+                renderItem={({ item, index }) => (
+                  <DateBox item={item} index={index} currentDay={currentDay} onPress={openModal} />
+                )}
+              />
+            </View>
 
-          <View style={styles.total}>
-            <Text style={styles.totalTxt}>Total Late: {late}</Text>
-            <Text style={styles.totalTxt}>Total Absent: {absent}</Text>
+            <View style={styles.total}>
+              <Text style={styles.totalTxt}>Total Late: {late}</Text>
+              <Text style={styles.totalTxt}>Total Absent: {absent}</Text>
+            </View>
           </View>
         </View>
       </View>

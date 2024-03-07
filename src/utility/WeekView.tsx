@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { weeks } from "../config/StaticVariables";
+import { cellWidth, weeks } from "../config/StaticVariables";
 
-const WeekView = () => {
+const WeekView = ():JSX.Element => {
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 6 }}>
             <FlatList
@@ -25,7 +25,7 @@ export default WeekView;
 
 const styles = StyleSheet.create({
     box: {
-        width: 50,
+        width: cellWidth,
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',

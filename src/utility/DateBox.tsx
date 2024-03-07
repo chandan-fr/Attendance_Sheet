@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { DayDate } from '../config/MonthToDateArray';
+import { cellWidth } from '../config/StaticVariables';
 
 
 type DateBox_Props = {
@@ -10,10 +11,12 @@ type DateBox_Props = {
     index: number;
 };
 
-const width = 50;
 const height = 90;
 
 const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Element => {
+    const shortTimeHour = item.time.split(":")[0];
+    const shortTimeMinute = item.time.split(":")[1];
+    const shortTime = `${shortTimeHour}:${shortTimeMinute}`;
 
     return (
         <TouchableOpacity
@@ -32,7 +35,8 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
             {!item.empty ?
                 <View style={{ rowGap: 4, width: "100%", alignItems: 'flex-start', justifyContent: "center" }}>
                     <Text style={[styles.time, { color: item.date == currentDay ? "#fff" : "#808886" }]}>
-                        {item.time}
+                        {/* {item.time} */}
+                        {item.time ? shortTime : null}
                     </Text>
 
                     {item.isAbsent == "absent" ?
@@ -76,7 +80,7 @@ export default DateBox;
 
 const styles = StyleSheet.create({
     box: {
-        width: width,
+        width: cellWidth,
         height: height,
         borderRadius: 10,
         elevation: 3,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
         rowGap: 4,
     },
     boxActive: {
-        width: width,
+        width: cellWidth,
         height: height,
         borderRadius: 10,
         elevation: 3,
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
         rowGap: 4,
     },
     boxHoliday: {
-        width: width,
+        width: cellWidth,
         height: height,
         borderRadius: 10,
         elevation: 3,
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "400",
     },
-    holiday:{
+    holiday: {
         borderWidth: 2,
         alignSelf: "center",
         borderColor: "#e3242b",
