@@ -30,10 +30,11 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
     setShow(false);
   };
 
-  const manageDate = (params: string) => {
+  const manageDate = (params: string, time: string) => {
     const entryTime = new Date().toTimeString().split(" ")[0];
-    const res = compareTimeWithCurrent(entryTime);
-    dispatch(updateMonthArray({index: curIndex, isAbsent: params, time: entryTime, status: res }));
+    const finalEntryTime = time ? time : entryTime
+    const res = compareTimeWithCurrent(finalEntryTime);
+    dispatch(updateMonthArray({index: curIndex, isAbsent: params, time: finalEntryTime, status: res }));
     closeModal();
     dispatch(countLateAndAbsent());
   };
@@ -109,12 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#EDE6DF",
     borderRadius: 6,
     paddingTop: 10,
-    elevation: 4,
     flex: 1,
   },
   calendar: {
-    flexWrap: "wrap",
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   total: {
     padding: 18,

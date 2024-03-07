@@ -1,7 +1,5 @@
-import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-
-const { height } = Dimensions.get("window");
 
 type UpdateModal_Props = {
     visible: boolean;
@@ -11,11 +9,13 @@ type UpdateModal_Props = {
 
 const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Element => {
     const [atData, setAtData] = useState<string>("present");
+    const [time, setTime] = useState<string>("");
 
     return (
         <Modal
             visible={visible}
             transparent={true}
+            style={{alignItems: "center", justifyContent: "center"}}
         >
             <View style={styles.body}>
                 <TouchableOpacity
@@ -48,22 +48,24 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
                         </TouchableOpacity>
                     </View>
 
-                    {/* <View>
-                        <TouchableOpacity
-                            style={[styles.save, { marginHorizontal: 0, paddingVertical: 10, elevation: 3 }]}
-                            onPress={() => getCurrentTime()}
-                        >
-                            <Text style={styles.btnTxt}>
-                                Entry Time
-                            </Text>
-                        </TouchableOpacity>
-                    </View> */}
+                    <View style={{rowGap: 10}}>
+                        <Text style={{fontSize: 18, fontWeight: "500", color: "#3d4342"}}>
+                            Enter Time Manually ?
+                        </Text>
+                        <TextInput
+                            placeholder='HH:MM:SS'
+                            style={styles.input}
+                            placeholderTextColor={"#2EBB92"}
+                            value= {time}
+                            onChangeText={value => setTime(value)}
+                        />
+                    </View>
                 </View>
 
                 <View style={{}}>
                     <TouchableOpacity
                         style={styles.save}
-                        onPress={() => onPress(atData)}
+                        onPress={() => {onPress(atData, time); setTime("")}}
                     >
                         <Text style={{ fontSize: 18, fontWeight: "500", color: "#3CCBA1" }}>
                             Save
@@ -81,7 +83,8 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "#fff",
         marginHorizontal: 40,
-        marginVertical: height / 3,
+        marginVertical: 110,
+        maxHeight: 290,
         elevation: 3,
         flex: 1,
         padding: 20,
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 2
+        elevation: 2,
     },
     btn: {
         backgroundColor: "#ffffff",
@@ -124,11 +127,22 @@ const styles = StyleSheet.create({
     btnTxt: {
         fontSize: 16,
         fontWeight: "500",
-        color: "#2EBB92"
+        color: "#2EBB92",
     },
     btnTxtActive: {
         fontSize: 16,
         fontWeight: "500",
-        color: "#ffffff"
+        color: "#ffffff",
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#2EBB92",
+        borderRadius: 5,
+        paddingLeft: 10,
+        backgroundColor: "#D1E7E1",
+        color: "#2EBB92",
+        fontSize: 16,
+        fontWeight: "500",
+        height: 40,
     },
 });
