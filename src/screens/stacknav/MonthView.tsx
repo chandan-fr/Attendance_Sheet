@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   total: {
     paddingVertical: 18,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   totalTxt: {
     fontSize: 18,
