@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
         marginVertical: 3,
         alignItems: "center",
         padding: 3,
-        rowGap: 4,
     },
     boxActive: {
         width: cellWidth,
@@ -116,7 +115,6 @@ const styles = StyleSheet.create({
         marginVertical: 3,
         alignItems: "center",
         padding: 3,
-        rowGap: 4,
     },
     boxHoliday: {
         width: cellWidth,
@@ -128,7 +126,6 @@ const styles = StyleSheet.create({
         marginVertical: 3,
         alignItems: "center",
         padding: 3,
-        rowGap: 4,
     },
     status: {
         width: "90%",

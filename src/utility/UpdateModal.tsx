@@ -11,6 +11,27 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
     const [atData, setAtData] = useState<string>("present");
     const [leaveHoliday, setLeaveHoliday] = useState<string>("");
     const [time, setTime] = useState<string>("");
+    const [error, setError] = useState<string>("");
+
+    const handleTime = () => {
+        const regEx = /^(0[1-9]|1[0-2]):[0-5][0-9]:[0-5][0-9]$/;
+        if (time && regEx.test(time)) {
+            onPress(atData, time, leaveHoliday);
+            setTime("");
+        } else if (!time) {
+            onPress(atData, time, leaveHoliday);
+            setTime("");
+        } else if (!regEx.test(time)) {
+            setError("Invalid Time Format");
+            
+        }
+    };
+
+    const close = () => {
+        onClose();
+        setError("");
+        setTime("");
+    };
 
     return (
         <Modal
@@ -19,13 +40,12 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
             style={{ alignItems: "center", justifyContent: "center" }}
         >
             <TouchableWithoutFeedback
-                onPressIn={() => setLeaveHoliday("")}
                 onPressOut={Keyboard.dismiss}
             >
                 <View style={styles.body}>
                     <TouchableOpacity
                         style={{ alignSelf: "flex-end", borderWidth: 1, padding: 4, borderRadius: 4 }}
-                        onPress={() => onClose()}
+                        onPress={() => close()}
                     >
                         <Text style={{ fontSize: 15, fontWeight: "500", color: "#000" }}>
                             Close
@@ -37,7 +57,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <TouchableOpacity
                                 style={atData == "present" ? styles.btnActive : styles.btn}
-                                onPress={() => {setAtData("present"); setLeaveHoliday("")}}
+                                onPress={() => { setAtData("present"); setLeaveHoliday("") }}
                             >
                                 <Text style={atData == "present" ? styles.btnTxtActive : styles.btnTxt}>
                                     Present
@@ -46,7 +66,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
 
                             <TouchableOpacity
                                 style={atData == "absent" ? styles.btnActive : styles.btn}
-                                onPress={() => {setAtData("absent"); setLeaveHoliday("")}}
+                                onPress={() => { setAtData("absent"); setLeaveHoliday("") }}
                             >
                                 <Text style={atData == "absent" ? styles.btnTxtActive : styles.btnTxt}>
                                     Absent
@@ -58,7 +78,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <TouchableOpacity
                                 style={leaveHoliday == "holiday" ? styles.btnActive : styles.btn}
-                                onPress={() => {setLeaveHoliday("holiday"); setAtData("")}}
+                                onPress={() => { setLeaveHoliday("holiday"); setAtData("") }}
                             >
                                 <Text style={leaveHoliday == "holiday" ? styles.btnTxtActive : styles.btnTxt}>
                                     Holiday
@@ -67,7 +87,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
 
                             <TouchableOpacity
                                 style={leaveHoliday == "leave" ? styles.btnActive : styles.btn}
-                                onPress={() => {setLeaveHoliday("leave"); setAtData("")}}
+                                onPress={() => { setLeaveHoliday("leave"); setAtData("") }}
                             >
                                 <Text style={leaveHoliday == "leave" ? styles.btnTxtActive : styles.btnTxt}>
                                     Leave
@@ -84,15 +104,17 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
                                 style={styles.input}
                                 placeholderTextColor={"#2EBB92"}
                                 value={time}
+                                onFocus={() => setError("")}
                                 onChangeText={value => setTime(value)}
                             />
+                            <Text style={{ color: "#e3242b", marginLeft: 5, marginTop: -5 }}>{error && error}</Text>
                         </View>
                     </View>
 
                     <View style={{}}>
                         <TouchableOpacity
                             style={styles.save}
-                            onPress={() => { onPress(atData, time, leaveHoliday); setTime("") }}
+                            onPress={() => handleTime()}
                         >
                             <Text style={{ fontSize: 18, fontWeight: "500", color: "#3CCBA1" }}>
                                 Save
