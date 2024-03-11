@@ -14,7 +14,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
     const [error, setError] = useState<string>("");
 
     const handleTime = () => {
-        const regEx = /^(0[1-9]|1[0-2]):[0-5][0-9]:[0-5][0-9]$/;
+        const regEx = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
         if (time && regEx.test(time)) {
             onPress(atData, time, leaveHoliday);
             setTime("");
@@ -97,7 +97,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
 
                         <View style={{ rowGap: 10 }}>
                             <Text style={{ fontSize: 18, fontWeight: "500", color: "#3d4342" }}>
-                                Enter Time Manually ?
+                                Enter Time Manually (24-hour) ?
                             </Text>
                             <TextInput
                                 placeholder='HH:MM:SS'
