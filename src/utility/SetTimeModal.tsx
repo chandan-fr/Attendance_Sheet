@@ -12,9 +12,9 @@ const SetTimeModal = ({ visible, onPress, onClose }: SetTimeModal): JSX.Element 
   const [error, setError] = useState<string>("");
 
   const handleTime = () => {
-    const regEx = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    const regEx = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
     if (time && regEx.test(time)) {
-      onPress(time);
+      onPress(time + ":59");
       setTime("");
     } else if (!regEx.test(time)) {
       setError("Invalid Time Format");
@@ -54,12 +54,23 @@ const SetTimeModal = ({ visible, onPress, onClose }: SetTimeModal): JSX.Element 
                 Enter Idle Time Thresold (24-hour)
               </Text>
               <TextInput
-                placeholder='HH:MM:SS'
+                placeholder='HH:MM'
+                autoFocus={true}
                 style={styles.input}
                 placeholderTextColor={"#2EBB92"}
                 value={time}
-                onChangeText={value => setTime(value)}
+                onChangeText={value => {
+                  // setTime(value);
+                  // if (value.length == 2 && !value.includes(":")) setTime(value + ":");
+                  const cleanedValue = value.replace(/\D/g, '').substring(0, 4);
+                  let formattedTime = cleanedValue;
+                  if (cleanedValue.length > 2) {
+                    formattedTime = cleanedValue.substring(0, 2) + ':' + cleanedValue.substring(2);
+                  }
+                  setTime(formattedTime);
+                }}
                 onFocus={() => setError("")}
+                maxLength={5}
               />
               <Text style={{ color: "#e3242b", marginLeft: 5, marginTop: -5 }}>{error && error}</Text>
             </View>

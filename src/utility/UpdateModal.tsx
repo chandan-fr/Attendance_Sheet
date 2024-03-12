@@ -14,7 +14,7 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
     const [error, setError] = useState<string>("");
 
     const handleTime = () => {
-        const regEx = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+        const regEx = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
         if (time && regEx.test(time)) {
             onPress(atData, time, leaveHoliday);
             setTime("");
@@ -23,7 +23,6 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
             setTime("");
         } else if (!regEx.test(time)) {
             setError("Invalid Time Format");
-            
         }
     };
 
@@ -100,12 +99,20 @@ const UpdateModal = ({ visible, onPress, onClose }: UpdateModal_Props): JSX.Elem
                                 Enter Time Manually (24-hour) ?
                             </Text>
                             <TextInput
-                                placeholder='HH:MM:SS'
+                                placeholder='HH:MM'
                                 style={styles.input}
                                 placeholderTextColor={"#2EBB92"}
                                 value={time}
                                 onFocus={() => setError("")}
-                                onChangeText={value => setTime(value)}
+                                onChangeText={value => {
+                                    const cleanedValue = value.replace(/\D/g, '').substring(0, 4);
+                                    let formattedTime = cleanedValue;
+                                    if (cleanedValue.length > 2) {
+                                        formattedTime = cleanedValue.substring(0, 2) + ':' + cleanedValue.substring(2);
+                                    }
+                                    setTime(formattedTime);
+                                }}
+                                maxLength={5}
                             />
                             <Text style={{ color: "#e3242b", marginLeft: 5, marginTop: -5 }}>{error && error}</Text>
                         </View>

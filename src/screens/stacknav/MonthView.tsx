@@ -34,7 +34,7 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
 
   const manageDate = (params: string, time: string, leaveHoliday: string) => {
     const entryTime: string = new Date().toTimeString().split(" ")[0];
-    const finalEntryTime: string = time ? time : entryTime;
+    const finalEntryTime: string = time ? time + ":00" : entryTime;
     const holiday: boolean = leaveHoliday == "holiday" ? true : false;
     const leave: boolean = leaveHoliday == "leave" ? true : false;
     const res = compareTimeWithCurrent(finalEntryTime, idle_time);
@@ -57,7 +57,7 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
           </Text>
 
           <View style={{ alignSelf: "flex-end", marginTop: 10, flexDirection: "row", columnGap: 20, alignItems: "center" }}>
-            <Text style={{fontSize: 13, fontWeight: "600", color: "#3d4342"}}>Idle Time : {idle_time}</Text>
+            <Text style={{ fontSize: 13, fontWeight: "600", color: "#3d4342" }}>Idle Time : {idle_time}</Text>
             <TouchableOpacity
               style={{ borderWidth: 1, borderRadius: 5, paddingVertical: 2, paddingHorizontal: 5, borderColor: "#3d4342" }}
               onPress={() => setTimeModal(true)}
