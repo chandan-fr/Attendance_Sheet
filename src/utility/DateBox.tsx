@@ -9,11 +9,12 @@ type DateBox_Props = {
     item: DayDate;
     onPress: Function;
     index: number;
+    navigation: any;
 };
 
 const height = 90;
 
-const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Element => {
+const DateBox = ({ item, index, currentDay, onPress, navigation }: DateBox_Props): JSX.Element => {
     const shortTimeHour = item.time.split(":")[0];
     const shortTimeMinute = item.time.split(":")[1];
     const shortTime = `${shortTimeHour}:${shortTimeMinute}`;
@@ -23,6 +24,7 @@ const DateBox = ({ item, index, currentDay, onPress }: DateBox_Props): JSX.Eleme
             style={item.date == currentDay ? styles.boxActive : item.isHoliday ? styles.boxHoliday : styles.box}
             disabled={item.isDisabled || item.empty ? true : false}
             onPress={() => onPress(index)}
+            onLongPress={()=> navigation.navigate("modifydate", {date: item?.date, i: index})}
         >
             <Text
                 style={[{ fontSize: 17, fontWeight: "600" },

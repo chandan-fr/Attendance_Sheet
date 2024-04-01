@@ -14,14 +14,14 @@ const Splash = ({ navigation }: Splash_Props): JSX.Element => {
 
   const getAsyncData = async (): Promise<void> => {
     const mtda: DayDate[] = getMonthToDatesArray();
-    const monthInMtda: number = mtda[0].month;
     const cunMonth = new Date().getMonth();
     const res: any = await AsyncStorage.getItem("@absentLate");
     const time: string | null = await AsyncStorage.getItem("@timeThresold");
     dispatch(setTimeThresold(time));
     
     const data = JSON.parse(res);
-
+    const monthInMtda: number = data[0].month;
+    
     if (data !== null && monthInMtda == cunMonth) {
       dispatch(getMonthArray(data));
     } else {

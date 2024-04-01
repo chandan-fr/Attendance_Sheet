@@ -57,7 +57,9 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
           </Text>
 
           <View style={{ alignSelf: "flex-end", marginTop: 10, flexDirection: "row", columnGap: 20, alignItems: "center" }}>
-            <Text style={{ fontSize: 13, fontWeight: "600", color: "#3d4342" }}>Idle Time : {idle_time}</Text>
+            <Text style={{ fontSize: 13, fontWeight: "600", color: "#3d4342" }}>
+              Idle Time : {`${idle_time.split(":")[0]}:${idle_time.split(":")[1]}`}
+            </Text>
             <TouchableOpacity
               style={{ borderWidth: 1, borderRadius: 5, paddingVertical: 2, paddingHorizontal: 5, borderColor: "#3d4342" }}
               onPress={() => setTimeModal(true)}
@@ -83,7 +85,7 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
                 keyExtractor={(_, index) => index.toString()}
                 ListHeaderComponent={<WeekView />}
                 renderItem={({ item, index }) => (
-                  <DateBox item={item} index={index} currentDay={currentDay} onPress={openModal} />
+                  <DateBox item={item} index={index} currentDay={currentDay} onPress={openModal} navigation={navigation} />
                 )}
               />
             </View>
