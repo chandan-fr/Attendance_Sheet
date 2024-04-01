@@ -20,7 +20,7 @@ const Splash = ({ navigation }: Splash_Props): JSX.Element => {
     dispatch(setTimeThresold(time));
     
     const data = JSON.parse(res);
-    const monthInMtda: number = data[0].month;
+    const monthInMtda: number = data !== null ? data[0]?.month : mtda[0]?.month;
     
     if (data !== null && monthInMtda == cunMonth) {
       dispatch(getMonthArray(data));
