@@ -1,10 +1,10 @@
-import { SafeAreaView, StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
 import DateBox from '../../utility/DateBox'
 import WeekView from '../../utility/WeekView';
 import UpdateModal from '../../utility/UpdateModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { countEvents, setTimeThresold, updateMonthArray } from '../../services/slices/AttendanceSlice';
+import { countEvents, setTimeThresold, showMonthData, updateMonthArray } from '../../services/slices/AttendanceSlice';
 import { compareTimeWithCurrent } from '../../config/CompareTime';
 import SetTimeModal from '../../utility/SetTimeModal';
 
@@ -12,16 +12,59 @@ type Splash_Props = {
   navigation: any
 };
 
+type Date_Obj_Type = {
+  currentYear: number;
+  currentMonth: string;
+  currentMonthIndex: number;
+};
+
 var curIndex: number;
 
 const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
   const { month_array, late, absent, leaves, work_days, idle_time } = useSelector((state: any) => state.attendanceSlice);
   const currentDay: number = new Date().getDate();
-  const currentYear: number = new Date().getFullYear();
-  const currentMonth: string = new Date().toLocaleString('en-US', { month: 'long' });
+  const [currentDate, setCurrentDate] = useState<Date_Obj_Type>(
+    {
+      currentMonth: new Date().toLocaleString('en-US', { month: 'long' }),
+      currentYear: new Date().getFullYear(),
+      currentMonthIndex: new Date().getMonth()
+    }
+  );
   const [show, setShow] = useState<boolean>(false);
+  const [prevNext, setPrevNext] = useState<boolean>(true);
   const [timeModal, setTimeModal] = useState<boolean>(false);
   const dispatch = useDispatch();
+
+  const setMonthData = (current: Date, curMIdx: number) => {
+    setCurrentDate({
+      currentMonth: current.toLocaleString('en-US', { month: 'long' }),
+      currentYear: current.getFullYear(),
+      currentMonthIndex: curMIdx,
+    });
+  };
+
+  const getCurrentMonth = (): Date => {
+    const { currentYear, currentMonthIndex } = currentDate;
+    return new Date(currentYear, currentMonthIndex);
+  };
+
+  const previousMonth = () => {
+    const current = getCurrentMonth();
+    current.setMonth(current.getMonth() - 1);
+    setMonthData(current, current.getMonth());
+    dispatch(showMonthData(0))
+    setPrevNext(false);
+    dispatch(countEvents());
+  };
+
+  const nextMonth = () => {
+    const current = getCurrentMonth();
+    current.setMonth(current.getMonth() + 1);
+    setMonthData(current, current.getMonth());
+    dispatch(showMonthData(1))
+    setPrevNext(true);
+    dispatch(countEvents());
+  };
 
   const openModal = (index: number) => {
     curIndex = index;
@@ -71,9 +114,27 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
 
         <View style={{ flex: 1 }}>
           <View style={styles.calendarWrap}>
-            <Text style={styles.sub_heading}>
-              {`${currentMonth}, ${currentYear}`}
-            </Text>
+            <View style={{ flexDirection: "row", columnGap: 20 }}>
+              <TouchableOpacity
+                style={[styles.arrowBtn, styles.rotate180, { backgroundColor: prevNext ? "" : "#E6E6E6" }]}
+                onPress={previousMonth}
+                disabled={prevNext ? false : true}
+              >
+                <Image style={styles.arrow} source={require("../../assets/icons/right-arrow.png")} />
+              </TouchableOpacity>
+
+              <Text style={styles.sub_heading}>
+                {`${currentDate?.currentMonth}, ${currentDate?.currentYear}`}
+              </Text>
+
+              <TouchableOpacity
+                style={[styles.arrowBtn, { backgroundColor: prevNext ? "#E6E6E6" : "" }]}
+                onPress={nextMonth}
+                disabled={prevNext ? true : false}
+              >
+                <Image style={styles.arrow} source={require("../../assets/icons/right-arrow.png")} />
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.calendar}>
               <FlatList
@@ -143,7 +204,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingTop: 10,
     flex: 1,
-
   },
   calendar: {
     flex: 1,
@@ -158,4 +218,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#808886",
   },
+  arrow: {
+    width: 15,
+    height: 15,
+    tintColor: "#F19733"
+  },
+  rotate180: {
+    transform: [{ rotate: "180deg" }]
+  },
+  arrowBtn: {
+    borderWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    borderColor: "#F19733"
+  }
 });

@@ -2,7 +2,7 @@ import { Image, StatusBar, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { DayDate, getMonthToDatesArray } from '../config/MonthToDateArray';
-import { countEvents, getMonthArray, setTimeThresold } from '../services/slices/AttendanceSlice';
+import { countEvents, getMonthArray, setMonthData, setTimeThresold } from '../services/slices/AttendanceSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Splash_Props = {
@@ -18,19 +18,33 @@ const Splash = ({ navigation }: Splash_Props): JSX.Element => {
     const res: any = await AsyncStorage.getItem("@absentLate");
     const time: string | null = await AsyncStorage.getItem("@timeThresold");
     dispatch(setTimeThresold(time));
-    
+
     const data = JSON.parse(res);
     const monthInMtda: number = data !== null ? data[0]?.month : mtda[0]?.month;
-    
+
     if (data !== null && monthInMtda == cunMonth) {
       dispatch(getMonthArray(data));
     } else {
       dispatch(getMonthArray(mtda));
+      storeMonthData(data);
+    }
+  };
+
+  const getMonthData = async (): Promise<void> => {
+    const res: any = await AsyncStorage.getItem("@monthData");
+    const monthData = JSON.parse(res);
+    if (monthData !== null) dispatch(setMonthData(monthData));
+  };
+
+  const storeMonthData = (prevData: DayDate[]) => {
+    if (prevData !== null) {
+      AsyncStorage.setItem("@monthData", JSON.stringify(prevData));
     }
   };
 
   useEffect(() => {
     getAsyncData();
+    getMonthData()
     setTimeout(() => {
       dispatch(countEvents());
       navigation.replace("monthview");

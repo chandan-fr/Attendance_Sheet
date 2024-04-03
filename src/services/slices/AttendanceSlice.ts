@@ -5,6 +5,8 @@ const AttendanceSlice = createSlice({
     name: "attendanceSlice",
     initialState: {
         month_array: [],
+        month_data: [],
+        temp_data: [],
         late: 0,
         absent: 0,
         leaves: 0,
@@ -72,8 +74,21 @@ const AttendanceSlice = createSlice({
             AsyncStorage.setItem("@timeThresold", defaultTime);
             state.idle_time = defaultTime;
         },
+        showMonthData(state, { payload }) {
+            if (payload) {
+                state.month_array = state.temp_data;
+            } else {
+                state.temp_data = state.month_array;
+                state.month_array = state.month_data;
+            }
+        },
+        setMonthData(state, { payload }) {
+            console.log("setMonthData",payload);
+            
+            state.month_data = payload;
+        },
     },
 });
 
-export const { getMonthArray, updateMonthArray, countEvents, setTimeThresold } = AttendanceSlice.actions;
+export const { getMonthArray, updateMonthArray, countEvents, setTimeThresold, showMonthData, setMonthData } = AttendanceSlice.actions;
 export default AttendanceSlice.reducer;
