@@ -21,7 +21,7 @@ type Date_Obj_Type = {
 var curIndex: number;
 
 const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
-  const { month_array, late, absent, leaves, work_days, idle_time } = useSelector((state: any) => state.attendanceSlice);
+  const { month_array, late, absent, leaves, work_days, idle_time, month_data } = useSelector((state: any) => state.attendanceSlice);
   const currentDay: number = new Date().getDate();
   const [currentDate, setCurrentDate] = useState<Date_Obj_Type>(
     {
@@ -118,7 +118,7 @@ const MonthView = ({ navigation }: Splash_Props): JSX.Element => {
               <TouchableOpacity
                 style={[styles.arrowBtn, styles.rotate180, { backgroundColor: prevNext ? "" : "#E6E6E6" }]}
                 onPress={previousMonth}
-                disabled={prevNext ? false : true}
+                disabled={prevNext && month_data?.length ? false : true}
               >
                 <Image style={styles.arrow} source={require("../../assets/icons/right-arrow.png")} />
               </TouchableOpacity>
