@@ -83,8 +83,6 @@ const AttendanceSlice = createSlice({
             }
         },
         setMonthData(state, { payload }) {
-            console.log("setMonthData",payload);
-            
             state.month_data = payload;
         },
     },
